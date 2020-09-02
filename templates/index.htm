@@ -1,4 +1,49 @@
+
+
 {% extends "base.htm" %}
+
 {% block content %}
-<h1>index page</h1>
-{%endblock%}
+
+  <div class="row">
+    <div class="col-sm-4">
+         <div  class="user_profile"> 
+               {{request.user.display_name}}
+                <br>
+                {% if request.user.is_authenticated %}
+                <a href="{% url 'profile_page' request.user.username %}"> @{{request.user.username}}</a>
+                {% else%}
+                <a></a>
+                {% endif%}
+                <br>
+                tweets: {{total_tweets}}
+                
+                      
+               
+                
+    
+    </div>
+    
+    </div>
+    <div class="col-sm-8">
+    <div class="user_tweet">
+    <ul>
+       {% for tweet in tweets %}
+       <li>
+       @{{tweet.tweet_user}} - <a href="{% url 'tweet_detail_page' tweet.id %}">{{tweet.created_at}}</a>
+        <ul> <li> {{tweet.tweet_content}}</li></ul>
+          {% firstof var1 tweet.tweet %}
+          <a href="{% url 'follow_page' tweet.tweet_user  %}" >follow</a>
+       <a href="{% url 'unfollow_page' tweet.tweet_user  %}" >unfollow</a>
+        </li>
+            <br>
+    {% endfor %}
+      </ul>
+    </div>
+    </div>
+   
+  </div>
+
+
+ 
+ 
+{% endblock %}
