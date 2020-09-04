@@ -22,19 +22,8 @@ class LoginForm(forms.Form):
 
 
 class SignUpForm(forms.ModelForm):
-    username = forms.CharField(max_length=30,widget=forms.TextInput(
-            attrs={
-            'class':'form-control',
-            'placeholder':'Write the username. . .'
-        }
-    ))
-    password = forms.CharField(widget=forms.PasswordInput(
-            attrs={
-            'class':'form-control',
-            'placeholder':'Enter the password. . .'
-        }
-  
-    ))
+    username = forms.CharField(max_length=30,widget=forms.TextInput)
+    password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
         model = models.TwitterUserModel
         fields = ['display_name']

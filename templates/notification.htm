@@ -1,0 +1,15 @@
+
+
+{% extends "base.htm" %}
+
+{% block content %}
+
+<div>
+{{ noti_count }}
+{% for noti in new_notification %}
+{{noti}}
+{% endfor%}
+
+</div>
+ 
+{% endblock %}

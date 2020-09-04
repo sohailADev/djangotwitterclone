@@ -15,8 +15,12 @@
                 <a></a>
                 {% endif%}
                 <br>
-                tweets: {{total_tweets}}
-                
+                  <br>
+                    <br>
+                      <br>
+                tweets: {{total_tweets}}    
+                <br>
+                Following:{{request.user.following.count}}      
                       
                
                 
@@ -27,13 +31,11 @@
     <div class="col-sm-8">
     <div class="user_tweet">
     <ul>
-       {% for tweet in tweets %}
+       {% for tweet in all_tweets %}
        <li>
-       @{{tweet.tweet_user}} - <a href="{% url 'tweet_detail_page' tweet.id %}">{{tweet.created_at}}</a>
+        <a href="{% url 'profile_page' tweet.tweet_user %}"> @{{tweet.tweet_user}}</a> - <a href="{% url 'tweet_detail_page' tweet.id %}">{{tweet.created_at}}</a>
         <ul> <li> {{tweet.tweet_content}}</li></ul>
-          {% firstof var1 tweet.tweet %}
-          <a href="{% url 'follow_page' tweet.tweet_user  %}" >follow</a>
-       <a href="{% url 'unfollow_page' tweet.tweet_user  %}" >unfollow</a>
+          {% firstof var1 tweet.tweet %}  
         </li>
             <br>
     {% endfor %}

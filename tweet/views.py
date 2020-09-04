@@ -2,17 +2,32 @@ from . import forms
 from django.shortcuts import render
 from django.shortcuts import render,HttpResponseRedirect,reverse,redirect
 from . import models
-
-
+from twitteruser.models import TwitterUserModel
+from notification.models import Notification
+import re
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def tweet_view(request):
     return render(request,'tweet.htm',{})
-
+@login_required(login_url="login_page")
 def add_tweet_view(request):      
     form = forms.AddTweetForm(request.POST or None)
     if request.POST and form.is_valid():
         data = form.cleaned_data
         new_tweet = models.Tweet.objects.create(tweet_content = data['tweet_content'],tweet_user=request.user)
+        # regex to extract username  
+        mentions = re.findall(r'@(\w+)', data['tweet_content'])
+        # IF REGEX IS TRUE 
+        if mentions:
+            for mention in mentions:
+                matched_user = TwitterUserModel.objects.get(username=mention)
+                if matched_user:                    
+                    # CRETE  NEW NOTIFICATION 
+                    Notification.objects.create( 
+                    user_to_notify = matched_user,
+                    tweet_to_be_notify = new_tweet
+                )
+
         if new_tweet:            
             return HttpResponseRedirect(request.GET.get('next', reverse("home_page")))
   
@@ -20,7 +35,6 @@ def add_tweet_view(request):
 
 
 def tweet_detail_view(request,tweet_id):   
-    tweets = models.Tweet.objects.filter(id=tweet_id)
-    total_tweets = models.Tweet.objects.filter(tweet_user__username=request.user.username).count()  
-    return render(request,'index.htm',{'tweets':tweets,'total_tweets':total_tweets})
+    tweets = models.Tweet.objects.get(id=tweet_id)     
+    return render(request,'tweetdetail.htm',{'tweet':tweets})
 

@@ -1,0 +1,64 @@
+
+
+{% extends "base.htm" %}
+
+{% block content %}
+
+  <div class="row">
+    <div class="col-sm-4">
+         <div  class="user_profile"> 
+               {{user_profile_data.display_name}}
+                <br>
+             
+                <a href="{% url 'profile_page' user_profile_data.username %}"> @{{user_profile_data.username}}</a>
+              
+        
+                <br>
+                <br>
+                <br>
+                <br>  
+                {% if request.user.is_authenticated  %}
+                  {% if user_profile_data != request.user %}            
+                        {% if  not follow_flag  %}
+                        <a href="{% url 'follow_page' user_profile_data.username  %}" >follow</a>
+                        {% else %}
+                            <a href="{% url 'unfollow_page' user_profile_data.username  %}" >unfollow</a>
+                        {% endif %} 
+                  {% endif %} 
+                  {% endif %} 
+                   <br>
+                tweets: {{total_tweets}}  
+                 <br>
+              
+                Following:{{user_profile_data.following.count}}
+                
+                      
+               
+                
+    
+    </div>
+    
+    </div>
+    <div class="col-sm-8">
+    <div class="user_tweet">
+    <ul>
+       {% for tweet in tweets %}
+       <li>
+       @{{tweet.tweet_user}} - <a href="{% url 'tweet_detail_page' tweet.id %}">{{tweet.created_at}}</a>
+        <ul> <li> {{tweet.tweet_content}}</li></ul>
+          {% firstof var1 tweet.tweet %}
+          
+       
+        </li>
+            <br>
+    {% endfor %}
+      </ul>
+    </div>
+    </div>
+   
+  </div>
+
+
+ 
+ 
+{% endblock %}
